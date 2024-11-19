@@ -24,3 +24,13 @@ TODO:
 | 00 4e | fl-16 | 0002 | Day 24 |
 | 18 5a | fl-16 | 0004 | 3:15 min (195 sec) |
 | 00 80 fd 44 | fl-32 | 000C | 2028 Coin |
+
+Suspicious values:
+
+| value | type | position | description |
+| --- | --- | --- | --- |
+| 00 bc | fl-16 | multiple | equipment lv.-1 |
+| 00 00 | fl-16 | multiple | equipment lv.0 |
+| 00 3c | fl-16 | multiple | equipment lv.1 |
+| 00 40 | fl-16 | multiple | equipment lv.2 |
+| 00 42 | fl-16 | multiple | equipment lv.3 |
