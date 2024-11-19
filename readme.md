@@ -1,5 +1,11 @@
 # Shawarma-Legend-Save
 
+- [Shawarma-Legend-Save](#shawarma-legend-save)
+  - [Data Structure](#data-structure)
+    - [Raw](#raw)
+    - [Suspect](#suspect)
+    - [Conclusion](#conclusion)
+
 沙威玛传奇存档
 
 存档位置：
@@ -16,7 +22,8 @@ TODO:
 
 ## Data Structure
 
-Raw:
+### Raw
+
 00 49 00 4e 18 5a 00 3c 0a 33 00 3c 00 80 fd 44 00 42 00 00 00 00 00 3c 00 3c 00 3c 00 3c 00 bc 00 bc 00 40 00 40 00 40 00 42 00 bc 00 bc 00 3c 00 bc 00 40 00 40 00 00 00 00 00 3c 00 40 00 40 00 00 00 3c 00 00 00 40
 
 Assumptions:
@@ -25,7 +32,10 @@ Assumptions:
 - Little Endian
 - The Author/Engine likes to use 16-bit float
 
-Suspect:
+---
+
+### Suspect
+
 [00 49] [00 4e] [18 5a] **(00 3c)** **(0a 33)** **(00 3c)** [00 80 fd 44] (00 42 00 00 00 00 00 3c 00 3c 00 3c 00 3c 00 bc 00 bc 00 40 00 40 00 40 00 42 00 bc 00 bc 00 3c 00 bc 00 40 00 40 00 00 00 00 00 3c 00 40 00 40 00 00 00 3c 00 00 00 40)
 
 > where [] means somehow related, () means suspect only
@@ -52,7 +62,7 @@ Suspicious values:
 
 ---
 
-Conclusion:
+### Conclusion
 
 - 0x00-0x01: Language, 2 (0x02) bytes, float-16
 
