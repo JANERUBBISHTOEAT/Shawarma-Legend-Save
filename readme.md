@@ -66,7 +66,7 @@ Suspicious values:
 
 - 0x00-0x01: Language, 2 (0x02) bytes, float-16
 
-  ```json
+  ```js
     { // float-16
         0x3C: English, // 1
         0x46: Italian, // 6
