@@ -14,12 +14,16 @@ Path of your data:
 %AppData%\..\Local\s1941
 ```
 
+![beta_html](image.png)
+> Beta version available at:
+> <https://janerubbishtoeat.github.io/Shawarma-Legend-Save/beta.html>
+
 TODO:
 
 - [x] Read Data Structure
 - [x] Write Data Structure
 - [x] A static web page to create and edit save data
-- [ ] Make it Game Like
+- [x] Make it Game Like
 
 ## Data Structure
 
