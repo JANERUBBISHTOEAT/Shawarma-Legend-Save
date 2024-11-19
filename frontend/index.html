@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shawarma Legend Save Editor</title>
+    <script type="module">
+      import {
+        getFloat16,
+        setFloat16,
+      } from "https://cdn.jsdelivr.net/npm/@petamoriken/float16/+esm";
+
+      function parseBase64File(fileContent) {
+        const binaryString = atob(fileContent);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes.buffer;
+      }
+
+      function readSave(fileBuffer) {
+        const dataView = new DataView(fileBuffer);
+        console.log("Raw data", [...new Uint8Array(fileBuffer).slice(0, 20)]);
+        return {
+          language: getFloat16(dataView, 0, true),
+          day_count: getFloat16(dataView, 2, true),
+          time_count: getFloat16(dataView, 4, true),
+          volume: getFloat16(dataView, 6, true),
+          music: getFloat16(dataView, 8, true),
+          voice: getFloat16(dataView, 10, true),
+          coin_count: dataView.getFloat32(12, true),
+          equipment: Array.from({ length: 28 }, (_, i) =>
+            getFloat16(dataView, 16 + i * 2, true)
+          ),
+        };
+      }
+
+      function writeSave(saveData) {
+        const buffer = new ArrayBuffer(72);
+        const dataView = new DataView(buffer);
+
+        setFloat16(dataView, 0, saveData.language, true);
+        setFloat16(dataView, 2, saveData.day_count, true);
+        setFloat16(dataView, 4, saveData.time_count, true);
+        setFloat16(dataView, 6, saveData.volume, true);
+        setFloat16(dataView, 8, saveData.music, true);
+        setFloat16(dataView, 10, saveData.voice, true);
+        dataView.setFloat32(12, saveData.coin_count, true);
+
+        saveData.equipment.forEach((value, i) => {
+          setFloat16(dataView, 16 + i * 2, value, true);
+        });
+
+        const binaryStr = String.fromCharCode(...new Uint8Array(buffer));
+        return btoa(binaryStr);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const fileInput = document.getElementById("fileInput");
+        const saveButton = document.getElementById("saveButton");
+        const fields = document.getElementById("fields");
+        const downloadLink = document.getElementById("downloadLink");
+
+        let saveData = null;
+
+        fileInput.addEventListener("change", (event) => {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const fileBuffer = parseBase64File(e.target.result);
+              saveData = readSave(fileBuffer);
+
+              fields.innerHTML = "";
+              for (const [key, value] of Object.entries(saveData)) {
+                const container = document.createElement("div");
+                container.classList.add("field-container");
+
+                const label = document.createElement("label");
+                label.textContent = key + ": ";
+
+                if (Array.isArray(value)) {
+                  value.forEach((val, index) => {
+                    const input = document.createElement("input");
+                    input.type = "number";
+                    input.value = val;
+                    input.dataset.key = `${key}[${index}]`;
+                    const subLabel = document.createElement("span");
+                    subLabel.textContent = ` (${key}[${index}]) `;
+                    container.appendChild(subLabel);
+                    container.appendChild(input);
+                  });
+                } else {
+                  const input = document.createElement("input");
+                  input.type = "number";
+                  input.value = value;
+                  input.dataset.key = key;
+                  container.appendChild(input);
+                }
+                fields.appendChild(label);
+                fields.appendChild(container);
+              }
+            };
+            reader.readAsText(file);
+          }
+        });
+
+        saveButton.addEventListener("click", () => {
+          if (!saveData) return;
+
+          const inputs = fields.querySelectorAll("input");
+          inputs.forEach((input) => {
+            const key = input.dataset.key;
+            const value = parseFloat(input.value);
+            if (key.includes("[")) {
+              const [baseKey, index] = key.match(/(\w+)\[(\d+)\]/).slice(1);
+              saveData[baseKey][parseInt(index, 10)] = value;
+            } else {
+              saveData[key] = value;
+            }
+          });
+
+          const newBase64 = writeSave(saveData);
+          const blob = new Blob([newBase64], {
+            type: "application/octet-stream",
+          });
+          downloadLink.href = URL.createObjectURL(blob);
+          downloadLink.download = "new_save.dat";
+          downloadLink.style.display = "block";
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Shawarma Legend Save Editor</h1>
+    <input type="file" id="fileInput" accept=".dat" />
+    <div id="fields"></div>
+    <button id="saveButton">Save</button>
+    <a id="downloadLink" style="display: none">Download New Save</a>
+  </body>
+</html>
