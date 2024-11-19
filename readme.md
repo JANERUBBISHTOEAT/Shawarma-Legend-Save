@@ -6,9 +6,9 @@
     - [Suspect](#suspect)
     - [Conclusion](#conclusion)
 
-沙威玛传奇存档
+Deployed on GitHub Pages: <https://janerubbishtoeat.github.io/Shawarma-Legend-Save/>
 
-存档位置：
+Path of your data:
 
 ```shell
 %AppData%\..\Local\s1941
