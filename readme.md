@@ -14,7 +14,7 @@ Path of your data:
 %AppData%\..\Local\s1941
 ```
 
-![beta_html](image.png)
+![beta_html](./docs/images/beta_sample.png)
 > Beta version available at:
 > <https://janerubbishtoeat.github.io/Shawarma-Legend-Save/beta.html>
 
