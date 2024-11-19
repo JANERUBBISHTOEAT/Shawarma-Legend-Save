@@ -26,7 +26,7 @@ Assumptions:
 - The Author/Engine likes to use 16-bit float
 
 Suspect:
-[00 49] [00 4e] [18 5a] **(00 3c)** **0a 33** **(00 3c)** [00 80 fd 44] (00 42 00 00 00 00 00 3c 00 3c 00 3c 00 3c 00 bc 00 bc 00 40 00 40 00 40 00 42 00 bc 00 bc 00 3c 00 bc 00 40 00 40 00 00 00 00 00 3c 00 40 00 40 00 00 00 3c 00 00 00 40)
+[00 49] [00 4e] [18 5a] **(00 3c)** **(0a 33)** **(00 3c)** [00 80 fd 44] (00 42 00 00 00 00 00 3c 00 3c 00 3c 00 3c 00 bc 00 bc 00 40 00 40 00 40 00 42 00 bc 00 bc 00 3c 00 bc 00 40 00 40 00 00 00 00 00 3c 00 40 00 40 00 00 00 3c 00 00 00 40)
 
 > where [] means somehow related, () means suspect only
 
@@ -35,6 +35,9 @@ Suspect:
 | 00 49 | float-16 | 0000 | Lan 10? |
 | 00 4e | float-16 | 0002 | Day 24 |
 | 18 5a | float-16 | 0004 | 3:15 min (195 sec) |
+| 00 3c | float-16 | 0006 | Volume |
+| 0a 33 | float-16 | 0008 | Music |
+| 00 3c | float-16 | 000A | Voice |
 | 00 80 fd 44 | float-32 | 000C | 2028 Coin |
 
 Suspicious values:
@@ -63,14 +66,13 @@ Conclusion:
 
 - 0x02-0x03: Day count, 2 (0x02) bytes, float-16
 - 0x04-0x05: Time count, 2 (0x02) bytes, float-16
-- **Unknown**
+- 0x06-0x0B: Volume, Music, Voice, 6 (0x06) bytes, float-16
 - 0x0C-0x0F: Coin count, 4 (0x04) bytes, float-32
 - 0x10-0x47: Store equipment, 56 (0x38) bytes, float-16
 
 Unknown (unlisted values):
 
-- Volume
-- Music
-- Voice
-- Fullscreen
--
+- [x] Volume
+- [x] Music
+- [x] Voice
+- [ ] Fullscreen
