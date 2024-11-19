@@ -36,7 +36,7 @@ Assumptions:
 
 ### Suspect
 
-[00 49] [00 4e] [18 5a] **(00 3c)** **(0a 33)** **(00 3c)** [00 80 fd 44] (00 42 00 00 00 00 00 3c 00 3c 00 3c 00 3c 00 bc 00 bc 00 40 00 40 00 40 00 42 00 bc 00 bc 00 3c 00 bc 00 40 00 40 00 00 00 00 00 3c 00 40 00 40 00 00 00 3c 00 00 00 40)
+[00 49] [00 4e] [18 5a] [00 3c] [0a 33] [00 3c] [00 80 fd 44] (00 42 00 00 00 00 00 3c 00 3c 00 3c 00 3c 00 bc 00 bc 00 40 00 40 00 40 00 42 00 bc 00 bc 00 3c 00 bc 00 40 00 40 00 00 00 00 00 3c 00 40 00 40 00 00 00 3c 00 00 00 40)
 
 > where [] means somehow related, () means suspect only
 
@@ -78,11 +78,12 @@ Suspicious values:
 - 0x04-0x05: Time count, 2 (0x02) bytes, float-16
 - 0x06-0x0B: Volume, Music, Voice, 6 (0x06) bytes, float-16
 - 0x0C-0x0F: Coin count, 4 (0x04) bytes, float-32
-- 0x10-0x47: Store equipment, 56 (0x38) bytes, float-16
+- **0x10-0x47: Store equipment, 56 (0x38) bytes, float-16**
 
 Unknown (unlisted values):
 
 - [x] Volume
 - [x] Music
 - [x] Voice
-- [ ] Fullscreen
+- [ ] Detailed equipment
+- ~~[ ] Fullscreen~~
