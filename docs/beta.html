@@ -55,12 +55,12 @@
         font-weight: bold;
         color: green;
       }
-      #controls {
+      .controls {
         text-align: center;
         margin: 20px;
       }
-      #controls button,
-      #controls a {
+      .controls button,
+      .controls a {
         margin-left: 10px;
         margin-right: 10px;
       }
@@ -118,6 +118,18 @@
         const saveButton = document.getElementById("saveButton");
         const fieldsContainer = document.getElementById("gameContainer");
         const downloadLink = document.getElementById("downloadLink");
+        const codeElement = document.querySelector("code");
+        codeElement.addEventListener("click", () => {
+          const text = codeElement.textContent;
+          navigator.clipboard
+            .writeText(text)
+            .then(() => {
+              alert("Text copied to clipboard");
+            })
+            .catch((err) => {
+              console.error("Failed to copy text: ", err);
+            });
+        });
 
         let saveData = null;
 
@@ -200,12 +212,16 @@
   </head>
   <body>
     <h1 style="text-align: center">Shawarma Legend Save Editor</h1>
-    <div id="controls">
+    <div class="controls">
       <input type="file" id="fileInput" accept=".dat" />
       <button id="saveButton">Save</button>
       <a id="downloadLink">Download New Save</a>
-      <a href="index.html">Go to Classic Version</a>
     </div>
     <div id="gameContainer"></div>
+    <div class="controls">
+      Save file location:
+      <code>%AppData%\..\Local\s1941</code>
+      <a href="index.html">Go to Classic Version</a>
+    </div>
   </body>
 </html>
