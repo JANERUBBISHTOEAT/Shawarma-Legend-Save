@@ -16,9 +16,10 @@
 
 TODO:
 
-- [ ] Read Data Structure
-- [ ] Write Data Structure
-- [ ] A static web page to create and edit save data
+- [x] Read Data Structure
+- [x] Write Data Structure
+- [x] A static web page to create and edit save data
+- [ ] Make it Game Like
 
 ## Data Structure
 
