@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shawarma Legend Save Editor</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      #gameContainer {
+        position: relative;
+        width: 80rem;
+        height: 45rem;
+        margin: 20px auto;
+        background: url("img/home_empty.png") no-repeat center center;
+        background-size: cover;
+        border: 2px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .field-container {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .field-container label {
+        font-size: 14px;
+        color: #fff;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+        margin-bottom: 5px;
+      }
+      .field-container input {
+        width: 60px;
+        padding: 5px;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      #controls {
+        text-align: center;
+        margin: 20px;
+      }
+      #downloadLink {
+        display: none;
+      }
+    </style>
+    <script type="module">
+      import {
+        getFloat16,
+        setFloat16,
+      } from "https://cdn.jsdelivr.net/npm/@petamoriken/float16/+esm";
+
+      function parseBase64File(fileContent) {
+        const binaryString = atob(fileContent);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes.buffer;
+      }
+
+      function readSave(fileBuffer) {
+        const dataView = new DataView(fileBuffer);
+        return {
+          language: getFloat16(dataView, 0, true),
+          day_count: getFloat16(dataView, 2, true),
+          time_count: getFloat16(dataView, 4, true),
+          volume: getFloat16(dataView, 6, true),
+          music: getFloat16(dataView, 8, true),
+          voice: getFloat16(dataView, 10, true),
+          coin_count: dataView.getFloat32(12, true),
+        };
+      }
+
+      function writeSave(saveData) {
+        const buffer = new ArrayBuffer(72);
+        const dataView = new DataView(buffer);
+
+        setFloat16(dataView, 0, saveData.language, true);
+        setFloat16(dataView, 2, saveData.day_count, true);
+        setFloat16(dataView, 4, saveData.time_count, true);
+        setFloat16(dataView, 6, saveData.volume, true);
+        setFloat16(dataView, 8, saveData.music, true);
+        setFloat16(dataView, 10, saveData.voice, true);
+        dataView.setFloat32(12, saveData.coin_count, true);
+
+        const binaryStr = String.fromCharCode(...new Uint8Array(buffer));
+        return btoa(binaryStr);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const fileInput = document.getElementById("fileInput");
+        const saveButton = document.getElementById("saveButton");
+        const fieldsContainer = document.getElementById("gameContainer");
+        const downloadLink = document.getElementById("downloadLink");
+
+        let saveData = null;
+
+        fileInput.addEventListener("change", (event) => {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const fileBuffer = parseBase64File(e.target.result);
+              saveData = readSave(fileBuffer);
+
+              fieldsContainer.innerHTML = "";
+
+              const positions = {
+                language: { top: "7rem", left: "1rem" },
+                day_count: { top: "11rem", left: "47rem" },
+                time_count: { top: "13.2rem", left: "42rem" },
+                volume: { top: "0rem", left: "0rem" },
+                music: { top: "0rem", left: "0rem" },
+                voice: { top: "0rem", left: "0rem" },
+                coin_count: { top: "11rem", left: "33rem" },
+              };
+
+              for (const [key, value] of Object.entries(saveData)) {
+                if (key === "volume" || key === "music" || key === "voice") {
+                  continue; // Skip these fields
+                }
+
+                const container = document.createElement("div");
+                container.classList.add("field-container");
+                container.style.top = positions[key].top;
+                container.style.left = positions[key].left;
+
+                const label = document.createElement("label");
+                label.textContent = key;
+
+                const input = document.createElement("input");
+                input.type = "number";
+                input.value = value;
+                input.dataset.key = key;
+
+                container.appendChild(label);
+                container.appendChild(input);
+                fieldsContainer.appendChild(container);
+              }
+            };
+            reader.readAsText(file);
+          }
+        });
+
+        saveButton.addEventListener("click", () => {
+          if (!saveData) return;
+
+          const inputs = fieldsContainer.querySelectorAll("input");
+          inputs.forEach((input) => {
+            const key = input.dataset.key;
+            const value = parseFloat(input.value);
+            saveData[key] = value;
+          });
+
+          const newBase64 = writeSave(saveData);
+          const blob = new Blob([newBase64], {
+            type: "application/octet-stream",
+          });
+          downloadLink.href = URL.createObjectURL(blob);
+          downloadLink.download = "new_save.dat";
+          downloadLink.style.display = "block";
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1 style="text-align: center">Shawarma Legend Save Editor</h1>
+    <div id="controls">
+      <input type="file" id="fileInput" accept=".dat" />
+      <button id="saveButton">Save</button>
+      <a id="downloadLink">Download New Save</a>
+    </div>
+    <div id="gameContainer"></div>
+  </body>
+</html>

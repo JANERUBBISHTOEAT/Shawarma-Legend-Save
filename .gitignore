@@ -1,2 +1,5 @@
 *.dat
 *.hex
+*.psd
+*.png
+!home_raw.png
