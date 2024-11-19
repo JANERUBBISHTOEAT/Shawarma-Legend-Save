@@ -2,4 +2,4 @@
 *.hex
 *.psd
 *.png
-!home_raw.png
+!home_empty.png
