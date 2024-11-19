@@ -1,7 +1,7 @@
 import base64
 import os
-from os.path import join, dirname
 from datetime import datetime
+from os.path import dirname, join
 
 # Construct the file path
 file_path = os.path.expandvars(r"%AppData%\..\Local\s1941\save.dat")
