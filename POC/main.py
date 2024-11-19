@@ -1,6 +1,7 @@
 import base64
 import os
 from os.path import join, dirname
+from datetime import datetime
 
 # Construct the file path
 file_path = os.path.expandvars(r"%AppData%\..\Local\s1941\save.dat")
@@ -22,3 +23,12 @@ print(f"Decoded data in hex: {separated_hex_str}")
 # Write the decoded bytes to a file
 with open(join(dirname(__file__), "decoded_save.hex"), "wb") as file:
     file.write(decoded_bytes)
+    # Get the current time
+    current_time = datetime.now().strftime("%Y%m%d%H%M%S")
+
+    # Construct the new file name with the current time
+    new_file_name = f"decoded_save_{current_time}.hex"
+
+    # Write the decoded bytes to a file with the new file name
+    with open(join(dirname(__file__), new_file_name), "wb") as file:
+        file.write(decoded_bytes)
