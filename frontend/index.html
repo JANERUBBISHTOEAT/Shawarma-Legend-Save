@@ -116,9 +116,15 @@
             const value = parseFloat(input.value);
             if (key.includes("[")) {
               const [baseKey, index] = key.match(/(\w+)\[(\d+)\]/).slice(1);
-              saveData[baseKey][parseInt(index, 10)] = value;
+              if (
+                Math.abs(saveData[baseKey][parseInt(index, 10)] - value) >
+                0.0001
+              ) {
+                saveData[baseKey][parseInt(index, 10)] = value;
+              }
             } else {
-              saveData[key] = value;
+              if (Math.abs(saveData[key] - value) > 0.0001)
+                saveData[key] = value;
             }
           });
 
